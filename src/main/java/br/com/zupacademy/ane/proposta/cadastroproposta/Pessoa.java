@@ -22,10 +22,11 @@ public class Pessoa {
     @NotBlank @NotNull
     private String nome;
 
-     @NotNull @Positive
+    @NotNull @Positive
     private BigDecimal salario;
 
     @Valid @NotBlank @CpfOuCnpj
+    @Column(unique = true)
     private String documento;
 
     @Embedded

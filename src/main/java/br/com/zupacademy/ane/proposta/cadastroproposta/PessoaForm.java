@@ -1,6 +1,7 @@
 package br.com.zupacademy.ane.proposta.cadastroproposta;
 
 import br.com.zupacademy.ane.proposta.validacao.CpfOuCnpj;
+import br.com.zupacademy.ane.proposta.validacao.UniqueValue;
 
 import javax.persistence.Embedded;
 import javax.persistence.EntityManager;
@@ -24,6 +25,7 @@ public class PessoaForm {
 
     @Valid
     @NotBlank @CpfOuCnpj
+    //@UniqueValue(domainClass = Pessoa.class, fieldName = "documento")
     private String documento;
 
     private Endereco endereco;
