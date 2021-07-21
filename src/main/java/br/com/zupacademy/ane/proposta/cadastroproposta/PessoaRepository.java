@@ -11,5 +11,5 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 
 
     @Query("select 1 FROM Pessoa p WHERE p.documento = :documento" )
-    Optional<Pessoa> findPessoa(@Param("documento") String documento);
+    Optional<Pessoa> findDocumento(@Param("documento") String documento);
 }
