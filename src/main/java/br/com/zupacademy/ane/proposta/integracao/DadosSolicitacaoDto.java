@@ -17,7 +17,7 @@ public class DadosSolicitacaoDto {
         this.status = status;
         this.idProposta = idProposta;
     }
-    
+
     @Deprecated
     public DadosSolicitacaoDto() {
     }
