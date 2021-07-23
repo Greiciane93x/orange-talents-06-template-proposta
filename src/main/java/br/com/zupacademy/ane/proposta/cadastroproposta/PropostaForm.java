@@ -1,8 +1,7 @@
 package br.com.zupacademy.ane.proposta.cadastroproposta;
 
-import br.com.zupacademy.ane.proposta.integracao.RetornoEligibilidade;
-import br.com.zupacademy.ane.proposta.integracao.StatusProposta;
 import br.com.zupacademy.ane.proposta.validacao.CpfOuCnpj;
+import org.springframework.http.ResponseEntity;
 
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
@@ -114,5 +113,4 @@ public class PropostaForm {
     public Pessoa converter(EntityManager manager) {
         return new Pessoa(idProposta,email, nome,salario, documento,endereco,status);
     }
-
 }

@@ -1,4 +1,4 @@
-package br.com.zupacademy.ane.proposta.healthcheck;
+package br.com.zupacademy.ane.proposta.actuator;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;

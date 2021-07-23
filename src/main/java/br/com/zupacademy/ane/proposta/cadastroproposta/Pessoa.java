@@ -1,7 +1,5 @@
 package br.com.zupacademy.ane.proposta.cadastroproposta;
 
-import br.com.zupacademy.ane.proposta.integracao.RetornoEligibilidade;
-import br.com.zupacademy.ane.proposta.integracao.StatusProposta;
 import br.com.zupacademy.ane.proposta.validacao.CpfOuCnpj;
 
 import javax.persistence.*;
@@ -13,7 +11,6 @@ import java.math.BigDecimal;
 
 @Entity
 public class Pessoa {
-
     @Id
     private Long id;
 
@@ -34,20 +31,20 @@ public class Pessoa {
     private Endereco endereco;
 
     @Enumerated(EnumType.STRING)
-    private RetornoEligibilidade statusProposta;
+    private RetornoEligibilidade status;
 
+    private String NumeroCartao;
 
     public Pessoa(Long id, String email, String nome, BigDecimal salario,
-                  String documento, Endereco endereco, RetornoEligibilidade statusProposta) {
+                  String documento, Endereco endereco, RetornoEligibilidade status) {
         this.id = id;
         this.email = email;
         this.nome = nome;
         this.salario = salario;
         this.documento = documento;
         this.endereco = endereco;
-        this.statusProposta = statusProposta;
+        this.status = status;
     }
-
     @Deprecated
     public Pessoa() {
     }
@@ -64,7 +61,13 @@ public class Pessoa {
         return documento;
     }
 
-    public RetornoEligibilidade getStatusProposta() {
-        return statusProposta;
-    }
+    public RetornoEligibilidade getStatus() { return status; }
+
+    public String getEmail() { return email; }
+
+    public BigDecimal getSalario() { return salario; }
+
+    public Endereco getEndereco() { return endereco; }
+
+    public String getNumeroCartao() { return NumeroCartao; }
 }
