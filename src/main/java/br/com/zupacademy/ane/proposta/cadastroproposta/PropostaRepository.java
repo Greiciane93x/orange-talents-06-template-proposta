@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public interface PropostaRepository extends JpaRepository<Proposta, Long> {
 
+    Optional<Proposta> findByNumeroCartao(String numeroCartao);
+
     @Query("select 1 FROM Proposta p WHERE p.documento = :documento")
     Optional<Proposta> findByDocumento(@Param("documento") String documento);
 

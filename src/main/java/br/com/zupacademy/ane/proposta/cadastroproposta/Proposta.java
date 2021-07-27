@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 
 @Entity
 public class Proposta {
+
     @Id
     private Long id;
 
