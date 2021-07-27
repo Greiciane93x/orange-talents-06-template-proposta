@@ -35,5 +35,4 @@ public class PropostaVinculaCartaoForm {
 
     public String getId() { return id; }
 
-
 }
