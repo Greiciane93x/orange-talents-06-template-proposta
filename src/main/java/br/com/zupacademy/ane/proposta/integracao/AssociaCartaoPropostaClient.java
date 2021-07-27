@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Map;
 
-@FeignClient(name = "associacartao",  url = "http://localhost:8888")
+@FeignClient(name = "associacartao",  url = "${contas}")
 public interface AssociaCartaoPropostaClient {
 
      @GetMapping("/api/cartoes")
