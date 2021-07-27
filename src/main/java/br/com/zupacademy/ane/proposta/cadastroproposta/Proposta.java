@@ -10,7 +10,7 @@ import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @Entity
-public class Pessoa {
+public class Proposta {
     @Id
     private Long id;
 
@@ -33,10 +33,9 @@ public class Pessoa {
     @Enumerated(EnumType.STRING)
     private RetornoEligibilidade status;
 
-    private String NumeroCartao;
+    private String numeroCartao;
 
-    public Pessoa(Long id, String email, String nome, BigDecimal salario,
-                  String documento, Endereco endereco, RetornoEligibilidade status) {
+    public Proposta(Long id, String email, String nome, BigDecimal salario, String documento, Endereco endereco, RetornoEligibilidade status) {
         this.id = id;
         this.email = email;
         this.nome = nome;
@@ -45,8 +44,20 @@ public class Pessoa {
         this.endereco = endereco;
         this.status = status;
     }
+
+    public Proposta(Long id, String email, String nome, BigDecimal salario, String documento, Endereco endereco, RetornoEligibilidade status, String numeroCartao) {
+        this.id = id;
+        this.email = email;
+        this.nome = nome;
+        this.salario = salario;
+        this.documento = documento;
+        this.endereco = endereco;
+        this.status = status;
+        this.numeroCartao = numeroCartao;
+    }
+
     @Deprecated
-    public Pessoa() {
+    public Proposta() {
     }
 
     public Long getId() {
@@ -69,5 +80,19 @@ public class Pessoa {
 
     public Endereco getEndereco() { return endereco; }
 
-    public String getNumeroCartao() { return NumeroCartao; }
+    public String getNumeroCartao() { return numeroCartao; }
+
+    @Override
+    public String toString() {
+        return "Proposta{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", nome='" + nome + '\'' +
+                ", salario=" + salario +
+                ", documento='" + documento + '\'' +
+                ", endereco=" + endereco +
+                ", status=" + status +
+                ", numeroCartao='" + numeroCartao + '\'' +
+                '}' +"\n";
+    }
 }
