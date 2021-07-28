@@ -4,19 +4,23 @@ import br.com.zupacademy.ane.proposta.cadastroproposta.Proposta;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.EntityManager;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class BiometriaForm {
 
-
     @JsonProperty("numeroCartao")
+    @NotBlank
     private String numeroCartao;
 
-    @JsonProperty("biometria")
+    @JsonProperty
+    @NotBlank
     private String biometria;
-    //@NotNull
+
     @JsonProperty("idProposta")
+    @NotNull
     private Long idProposta;
-    //@NotBlank
+
     public BiometriaForm(String numeroCartao,String biometria, Long idProposta) {
         this.numeroCartao = numeroCartao;
         this.biometria = biometria;
@@ -39,8 +43,7 @@ public class BiometriaForm {
     public BiometriaForm() {
     }
 
-    public Biometria converter(EntityManager manager) {
-        Proposta proposta = manager.find(Proposta.class, idProposta);
+    public Biometria converter(EntityManager manager, Proposta proposta) {
         return new Biometria(numeroCartao,biometria,proposta);
     }
 
