@@ -1,10 +1,11 @@
 package br.com.zupacademy.ane.proposta.bloqueiocartao;
 
+import br.com.zupacademy.ane.proposta.cadastroproposta.Proposta;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 public class BloqueioForm {
@@ -13,6 +14,8 @@ public class BloqueioForm {
     @JsonIgnore
     private LocalDateTime instante = LocalDateTime.now();
 
+    @JsonIgnore
+    private Long idBloqueio;
 
     @JsonIgnore
     private String ipClient;
@@ -22,23 +25,32 @@ public class BloqueioForm {
     private String userAgent;
 
     @JsonIgnore
-    private String numeroCartao;
+    private Long idProposta;
 
     private HttpServletRequest request;
+
+    @PersistenceContext
+    private EntityManager manager;
 
     @Deprecated
     public BloqueioForm() {
     }
 
-    public BloqueioForm(LocalDateTime instante, String ipClient, String userAgent, @NotBlank String numeroCartao,HttpServletRequest request) {
+    public BloqueioForm(Long idProposta,Long idBloqueio,LocalDateTime instante, String ipClient, String userAgent, HttpServletRequest request) {
+        this.idProposta = idProposta;
+        this.idBloqueio = idBloqueio;
         this.instante = LocalDateTime.now();
         this.ipClient = request.getRemoteAddr();
         this.userAgent = request.getHeader("User-Agent");
-        this.numeroCartao = numeroCartao;
+
     }
 
     public LocalDateTime getInstante() {
         return instante;
+    }
+
+    public Long getIdBloqueio() {
+        return idBloqueio;
     }
 
     public String getIpClient(HttpServletRequest request) {
@@ -49,12 +61,8 @@ public class BloqueioForm {
         return request.getHeader("User-Agent");
     }
 
-    public String getNumeroCartao() {
-        return numeroCartao;
-    }
-
-    public BloqueioCartao converter(EntityManager manager, String numeroCartao, HttpServletRequest request) {
-       return new BloqueioCartao(instante, request.getRemoteAddr(), request.getHeader("User-Agent"),numeroCartao);
+    public BloqueioCartao converter(Proposta proposta, HttpServletRequest request) {
+       return new BloqueioCartao(proposta,instante, request.getRemoteAddr(), request.getHeader("User-Agent"));
     }
 
 

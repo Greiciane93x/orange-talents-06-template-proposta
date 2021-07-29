@@ -2,6 +2,7 @@ package br.com.zupacademy.ane.proposta.bloqueiocartao;
 
 import br.com.zupacademy.ane.proposta.cadastroproposta.Proposta;
 import br.com.zupacademy.ane.proposta.cadastroproposta.PropostaRepository;
+import feign.Feign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,47 +24,31 @@ public class BloqueioCartaoController {
     private BloqueioCartaoRepository bloqueioRepository;
 
     @Autowired
-    private PropostaRepository cartaoRepository;
+    private PropostaRepository propostaRepository;
 
     @PersistenceContext
     private EntityManager manager;
 
-
-    @PostMapping("/bloqueio/{cartao}")
+    @PostMapping("/bloqueio/{idProposta}")
     @Transactional
-    public ResponseEntity<?> bloqueiaCartao(@PathVariable("cartao") String cartao, @Valid BloqueioForm form, HttpServletRequest request) {
+    public ResponseEntity<?> bloqueiaCartao(@PathVariable("idProposta") Long idProposta, @Valid BloqueioForm form, HttpServletRequest request) {
 
-        Optional<BloqueioCartao> resultBloqueioCartao = bloqueioRepository.findByNumeroCartao(cartao);
-        Optional<Proposta> resultBuscaCartao = cartaoRepository.findByNumeroCartao(cartao);
+         Optional<Proposta> resultBuscaCartao = propostaRepository.findById(idProposta);
+         Optional<BloqueioCartao>resultBloqueioCartao = bloqueioRepository.buscaIdProposta(idProposta);
 
-        if(!resultBuscaCartao.isPresent()){
-            return ResponseEntity.status(404).build();
-        }
-        if (resultBloqueioCartao.isPresent()) {
+        if(resultBloqueioCartao.isPresent()){
             return ResponseEntity.status(422).build();
         }
-        BloqueioCartao bloqueioCartao = form.converter(manager, cartao, request);
-        manager.persist(bloqueioCartao);
-        return ResponseEntity.status(200).build();
-
+        if (!resultBuscaCartao.isPresent()) {
+            return ResponseEntity.status(404).build();
+        }
+         try{
+            Proposta proposta = manager.find(Proposta.class, idProposta);
+            BloqueioCartao bloqueioCartao = form.converter(proposta, request);
+            var salvaBloqueio = bloqueioRepository.save(bloqueioCartao);
+            return ResponseEntity.ok().body(salvaBloqueio);
+        }catch (IllegalArgumentException ex){
+             return ResponseEntity.status(400).build();
+        }
     }
 }
-//        Objetivo
-//        Realizar o bloqueio do cartão.
-//
-//        Necessidades
-//        O usuário do cartão pode realizar o bloqueio do cartão por alguma suspeita de fraude. x
-//
-//        Informar o identificador do cartão a ser bloqueado. x
-//
-//
-//        Restrições
-//
-//        Caso o cartão esteja já bloqueado devemos retornar um erro de negócio.
-//
-//        Resultado Esperado
-//        Bloqueio deve estar armazenada no sistema, com um identificador gerado pelo sistema.
-//
-//
-//        Retornar 400 quando violado alguma das restrições.
-//
