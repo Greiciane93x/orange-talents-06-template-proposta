@@ -5,7 +5,7 @@ import feign.codec.ErrorDecoder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public class HandlerFeignError implements ErrorDecoder {
+public class HandlerFeignError extends Throwable implements ErrorDecoder {
     @Override
     public Exception decode(String s, Response response) {
         if(response.status() == 400){

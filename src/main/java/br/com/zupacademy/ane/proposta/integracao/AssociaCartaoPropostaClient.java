@@ -1,12 +1,9 @@
 package br.com.zupacademy.ane.proposta.integracao;
 
 import br.com.zupacademy.ane.proposta.associapropostacartao.PropostaVinculaCartaoForm;
+import br.com.zupacademy.ane.proposta.bloqueiocartao.SistemaBloqueioForm;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -15,4 +12,8 @@ public interface AssociaCartaoPropostaClient {
 
      @GetMapping("/api/cartoes")
      Map<Object, ?> associaCartaoProposta(@RequestBody PropostaVinculaCartaoForm form);
+
+     @PostMapping("/api/cartoes/{id}/bloqueios")
+     Map<Object,?> verificaBloqueio(@PathVariable("id") Long idProposta, @RequestBody SistemaBloqueioForm form);
+
 }

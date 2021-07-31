@@ -2,10 +2,7 @@ package br.com.zupacademy.ane.proposta.bloqueiocartao;
 
 import br.com.zupacademy.ane.proposta.cadastroproposta.Proposta;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
@@ -13,7 +10,7 @@ import java.time.LocalDateTime;
 public class BloqueioCartao {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idBloqueioCartao;
 
     private LocalDateTime instante;
@@ -54,9 +51,7 @@ public class BloqueioCartao {
         return instante;
     }
 
-    public String getIpClient() {
-        return ipClient;
-    }
+    public String getIpClient() { return ipClient; }
 
     public String getUserAgent() {
         return userAgent;

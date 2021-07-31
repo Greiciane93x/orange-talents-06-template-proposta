@@ -13,4 +13,5 @@ public interface AnalisePropostaClient {
     @PostMapping("api/solicitacao")
     Map<Object,?> avaliaProposta(@RequestBody PropostaForm form);
 
+
 }

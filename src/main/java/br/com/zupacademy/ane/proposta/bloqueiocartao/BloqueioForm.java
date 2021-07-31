@@ -20,7 +20,6 @@ public class BloqueioForm {
     @JsonIgnore
     private String ipClient;
 
-
     @JsonIgnore
     private String userAgent;
 
@@ -36,7 +35,8 @@ public class BloqueioForm {
     public BloqueioForm() {
     }
 
-    public BloqueioForm(Long idProposta,Long idBloqueio,LocalDateTime instante, String ipClient, String userAgent, HttpServletRequest request) {
+    public BloqueioForm(Long idProposta,Long idBloqueio,LocalDateTime instante,
+                        String ipClient, String userAgent, HttpServletRequest request) {
         this.idProposta = idProposta;
         this.idBloqueio = idBloqueio;
         this.instante = LocalDateTime.now();
@@ -49,21 +49,14 @@ public class BloqueioForm {
         return instante;
     }
 
-    public Long getIdBloqueio() {
-        return idBloqueio;
-    }
+    public Long getIdBloqueio() { return idBloqueio; }
 
-    public String getIpClient(HttpServletRequest request) {
-        return request.getRemoteAddr();
-    }
+    public String getIpClient(HttpServletRequest request) { return request.getRemoteAddr(); }
 
-    public String getUserAgent(HttpServletRequest request) {
-        return request.getHeader("User-Agent");
-    }
+    public String getUserAgent(HttpServletRequest request) { return request.getHeader("User-Agent"); }
 
     public BloqueioCartao converter(Proposta proposta, HttpServletRequest request) {
        return new BloqueioCartao(proposta,instante, request.getRemoteAddr(), request.getHeader("User-Agent"));
     }
-
 
 }
