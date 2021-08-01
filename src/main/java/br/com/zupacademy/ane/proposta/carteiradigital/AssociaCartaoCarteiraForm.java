@@ -18,7 +18,11 @@ public class AssociaCartaoCarteiraForm {
 
     public AssociaCartaoCarteiraForm(String email, Carteira carteira, Long idProposta) {
         this.email = email;
-        this.carteira = carteira.PAYPAL;
+        if(this.carteira == Carteira.PAYPAL){
+            this.carteira = carteira.PAYPAL;
+        }else{
+            this.carteira = carteira.SAMSUNG_PAY;
+        }
         this.idProposta = idProposta;
     }
 

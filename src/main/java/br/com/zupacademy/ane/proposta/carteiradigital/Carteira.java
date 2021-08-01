@@ -1,5 +1,5 @@
 package br.com.zupacademy.ane.proposta.carteiradigital;
 
 public enum Carteira {
-    PAYPAL;
+    PAYPAL, SAMSUNG_PAY;
 }
