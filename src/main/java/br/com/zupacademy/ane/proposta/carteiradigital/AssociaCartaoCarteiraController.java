@@ -2,6 +2,8 @@ package br.com.zupacademy.ane.proposta.carteiradigital;
 
 import br.com.zupacademy.ane.proposta.cadastroproposta.Proposta;
 import br.com.zupacademy.ane.proposta.cadastroproposta.PropostaRepository;
+import br.com.zupacademy.ane.proposta.integracao.AssociaCartaoPropostaClient;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -28,43 +30,51 @@ public class AssociaCartaoCarteiraController {
 
     private AssociaCartaoCarteiraRepositoy associaCartaoRepository;
 
+    private AssociaCartaoPropostaClient verificaAssociacao;
+
+
 
     @Autowired
-    public AssociaCartaoCarteiraController(EntityManager manager, PropostaRepository propostaRepository, AssociaCartaoCarteiraRepositoy associaCartaoRepository) {
+    public AssociaCartaoCarteiraController(EntityManager manager, PropostaRepository propostaRepository,
+                                           AssociaCartaoCarteiraRepositoy associaCartaoRepository, AssociaCartaoPropostaClient verificaAssociacao) {
         this.manager = manager;
         this.propostaRepository = propostaRepository;
         this.associaCartaoRepository = associaCartaoRepository;
+        this.verificaAssociacao = verificaAssociacao;
     }
+
 
     @PostMapping("/associa/cartao/carteira/{id}")
     @Transactional
-    public ResponseEntity<?> associaCarteira(@PathVariable("id") Long id, @RequestBody @Valid AssociaCartaoCarteiraForm form){
+    public ResponseEntity<?> associaCarteira(@PathVariable("id") Long id, @RequestBody @Valid AssociaCartaoCarteiraForm form) {
 
-        // Aqui eu busco idProposta para saber se já existe  associação
-        // Para me certificar, essa busca ocorre na tabela de associação de
-        // carteira ao cartão
-        // com base no id de proposta
+        try {
+            var apiExterna = verificaAssociacao.verificaAssociacao(id, form);
 
-        Optional<AssociaCartaoCarteira> buscandoAssociacao = associaCartaoRepository.buscaIdProposta(id);
+            Optional<AssociaCartaoCarteira> buscandoAssociacao = associaCartaoRepository.buscaIdProposta(id);
 
-        if(buscandoAssociacao.isPresent()){
-            return ResponseEntity.unprocessableEntity().build();
+            if (buscandoAssociacao.isPresent()) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
+            AssociaCartaoCarteira associaCartaoCarteira = form.converter(manager);
+
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                    .path("/{id}")
+                    .buildAndExpand(form.getCarteira())
+                    .toUri();
+
+            Optional<Proposta> proposta = propostaRepository.findById(id);
+            if (proposta.isPresent()) {
+                manager.persist(associaCartaoCarteira);
+                return ResponseEntity.status(201).header(HttpHeaders.LOCATION, String.valueOf(uri)).build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+
+        } catch (FeignException ex) {
+            ex.getCause();
         }
-        AssociaCartaoCarteira associaCartaoCarteira = form.converter(manager);
-        // gerando URI
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .path("/{id}")
-                .buildAndExpand(form.getCarteira())
-                .toUri();
-
-        // Aqui faço a tratativa caso a proposta exista
-        // Essa busca é feita na tabela de proposta
-        Optional<Proposta> proposta = propostaRepository.findById(id);
-        if(proposta.isPresent()) {
-            manager.persist(associaCartaoCarteira);
-            return ResponseEntity.status(201).header(HttpHeaders.LOCATION, String.valueOf(uri)).build();
-        }else{
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.badRequest().build();
     }
+
 }
