@@ -74,7 +74,6 @@ public class AvisoViagemController {
             return ResponseEntity.status(400).build();
         }
 
-
 }
 
 
