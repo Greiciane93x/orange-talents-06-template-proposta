@@ -25,7 +25,7 @@ public class VerificaBloqueioCartaoController {
     private EntityManager manager;
 
 
-    @PostMapping("/testaCli/{id}")
+    @PostMapping("/bloqueio/{id}")
     @Transactional
     public ResponseEntity<?> criaTestC(@PathVariable("id") Long idProposta,
                                        @RequestBody SistemaBloqueioForm formBloqueio,

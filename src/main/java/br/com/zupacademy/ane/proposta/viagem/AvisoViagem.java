@@ -3,7 +3,6 @@ package br.com.zupacademy.ane.proposta.viagem;
 import br.com.zupacademy.ane.proposta.cadastroproposta.Proposta;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @Entity
@@ -28,13 +27,17 @@ public class AvisoViagem {
 
     public AvisoViagem(LocalDate instanteViagem, String ipClient, String userAgent,
                        String destinoViagem, LocalDate terminoViagem, Proposta proposta) {
-     //   this.idAvisoViagem = idAvisoViagem;
         this.instanteViagem = instanteViagem;
         this.ipClient = ipClient;
         this.userAgent = userAgent;
         this.destinoViagem = destinoViagem;
         this.terminoViagem = terminoViagem;
         this.proposta = proposta;
+    }
+
+    public AvisoViagem(String destino, LocalDate validoAte) {
+        this.destinoViagem = destino;
+        this.terminoViagem = validoAte;
     }
 
     public Long getIdAvisoViagem() {

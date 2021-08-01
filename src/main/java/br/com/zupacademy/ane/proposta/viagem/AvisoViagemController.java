@@ -3,6 +3,8 @@ package br.com.zupacademy.ane.proposta.viagem;
 import br.com.zupacademy.ane.proposta.bloqueiocartao.BloqueioCartao;
 import br.com.zupacademy.ane.proposta.cadastroproposta.Proposta;
 import br.com.zupacademy.ane.proposta.cadastroproposta.PropostaRepository;
+import br.com.zupacademy.ane.proposta.integracao.AssociaCartaoPropostaClient;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,9 @@ public class AvisoViagemController {
 
     @Autowired
     private PropostaRepository propostaRepository;
+
+    @Autowired
+    private AssociaCartaoPropostaClient analise;
 
     @PersistenceContext
     private EntityManager manager;
@@ -52,24 +57,24 @@ public class AvisoViagemController {
         }
     }
 
+    @PostMapping("/aviso/viagem/{idProposta}/client")
+    @Transactional ResponseEntity<?> criaAvisoViagemServicoExterno(@PathVariable("idProposta") Long idProposta,
+                                                                   @RequestBody @Valid VerificaAvisoViagemForm form,
+                                                                   HttpServletRequest request){
+
+            try {
+                var retornaCli = analise.verificaViagem(idProposta, form);
+                Proposta proposta = manager.find(Proposta.class, idProposta);
+                AvisoViagem avisoViagem = form.converter(proposta, request);
+                var avisoviagem= avisoViagemRepository.save(avisoViagem);
+                return ResponseEntity.ok().body(avisoViagem);
+            }catch (FeignException ex){
+                ex.getCause();
+            }
+            return ResponseEntity.status(400).build();
+        }
+
+
 }
 
 
-//
-//
-//    Aviso de Viagem
-//        Objetivo
-//    Cadastrar um aviso de viagem para o cartão.
-//
-//        Necessidades
-//        O portador do cartão pode realizar uma notificação para o banco, dizendo que pretende utilizar o cartão em um determinado destino, isso ajuda o banco no controle das fraudes.
-//      Restrições
-//        O identificador do cartão é obrigatório e deve ser informado na URL (path parameter).
-//        O destino da viagem é obrigatório, ou seja, não pode ser nulo ou vazio.
-//        A data do término da viagem é obrigatória, ou seja, não pode ser nulo ou uma data antiga.
-//        Resultado Esperado
-//        O aviso de viagem deve estar armazenado no sistema, com um identificador gerado pelo sistema.
-//        Retornar 200 em caso de sucesso.
-//        Retornar 400 quando violado alguma das restrições.
-//        Retornar 404 quando o cartão não for encontrado.
-//        Antes de começar
