@@ -1,6 +1,7 @@
 package br.com.zupacademy.ane.proposta.cadastroproposta;
 
 import br.com.zupacademy.ane.proposta.validacao.CpfOuCnpj;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -34,14 +35,20 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private RetornoEligibilidade status;
 
+
     private String numeroCartao;
+
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+    String resultDocumento = encoder.encode(documento);
+    String resultNumeroCartao = encoder.encode(numeroCartao);
 
     public Proposta(Long id, String email, String nome, BigDecimal salario, String documento, Endereco endereco, RetornoEligibilidade status) {
         this.id = id;
         this.email = email;
         this.nome = nome;
         this.salario = salario;
-        this.documento = documento;
+        this.documento = resultDocumento;
         this.endereco = endereco;
         this.status = status;
     }
@@ -51,10 +58,10 @@ public class Proposta {
         this.email = email;
         this.nome = nome;
         this.salario = salario;
-        this.documento = documento;
+        this.documento = resultDocumento;
         this.endereco = endereco;
         this.status = status;
-        this.numeroCartao = numeroCartao;
+        this.numeroCartao = resultNumeroCartao;
     }
 
     @Deprecated
