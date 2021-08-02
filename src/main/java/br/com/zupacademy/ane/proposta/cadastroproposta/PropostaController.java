@@ -46,7 +46,7 @@ public class PropostaController {
                     .toUri();
 
             manager.persist(proposta);
-                return ResponseEntity.status(201).body(uri);
+            return ResponseEntity.status(201).body(uri);
         }
         return ResponseEntity.status(422).build();
     }

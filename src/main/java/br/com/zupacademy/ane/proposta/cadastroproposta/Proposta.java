@@ -35,13 +35,8 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private RetornoEligibilidade status;
 
-
     private String numeroCartao;
 
-//
-//    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
-//    String resultDocumento = encoder.encode(documento);
-//    String resultNumeroCartao = encoder.encode(numeroCartao);
 
     public Proposta(Long id, String email, String nome, BigDecimal salario, String documento, Endereco endereco, RetornoEligibilidade status) {
         this.id = id;

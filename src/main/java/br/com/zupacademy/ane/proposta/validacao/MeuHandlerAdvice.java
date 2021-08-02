@@ -18,7 +18,7 @@ public class MeuHandlerAdvice {
     /**
      * padronizei de acordo com o padrão zup para treinar
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(HandlerFeignError.class)
     public ResponseEntity<ErrorStandard> handle(MethodArgumentNotValidException methodArgumentNotValidException){
         Collection<String> messages = new ArrayList<>();
         BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();

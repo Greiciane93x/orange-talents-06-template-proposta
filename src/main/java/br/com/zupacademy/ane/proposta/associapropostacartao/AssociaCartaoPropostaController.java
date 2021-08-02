@@ -6,6 +6,7 @@ import br.com.zupacademy.ane.proposta.integracao.AssociaCartaoPropostaClient;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -24,11 +25,17 @@ public class AssociaCartaoPropostaController {
     @PostMapping(value = "vincula/cartao")
     @Transactional
     public ResponseEntity<?> associandoPropostaCartao(@RequestBody PropostaVinculaCartaoForm form) {
+
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+
+
         Map<Object, ?> associaPropostaCartao = associa.associaCartaoProposta(form);
         try {
             Optional<Proposta> proposta = repository.findByIdAndNumeroCartao(form.getIdProposta(), form.getId());
             if (proposta.isPresent()) {
-                repository.saveCartao((String) associaPropostaCartao.get("id"), form.getIdProposta());
+                String resultDocumento = (String) associaPropostaCartao.get("id");
+                repository.saveCartao(encoder.encode(resultDocumento), form.getIdProposta());
                 return ResponseEntity.ok().build();
             }
 
