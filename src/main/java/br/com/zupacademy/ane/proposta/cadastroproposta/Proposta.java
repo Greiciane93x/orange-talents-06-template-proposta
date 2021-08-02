@@ -38,17 +38,17 @@ public class Proposta {
 
     private String numeroCartao;
 
-
-    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
-    String resultDocumento = encoder.encode(documento);
-    String resultNumeroCartao = encoder.encode(numeroCartao);
+//
+//    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+//    String resultDocumento = encoder.encode(documento);
+//    String resultNumeroCartao = encoder.encode(numeroCartao);
 
     public Proposta(Long id, String email, String nome, BigDecimal salario, String documento, Endereco endereco, RetornoEligibilidade status) {
         this.id = id;
         this.email = email;
         this.nome = nome;
         this.salario = salario;
-        this.documento = resultDocumento;
+        this.documento = documento;
         this.endereco = endereco;
         this.status = status;
     }
@@ -58,10 +58,10 @@ public class Proposta {
         this.email = email;
         this.nome = nome;
         this.salario = salario;
-        this.documento = resultDocumento;
+        this.documento = documento;
         this.endereco = endereco;
         this.status = status;
-        this.numeroCartao = resultNumeroCartao;
+        this.numeroCartao = numeroCartao;
     }
 
     @Deprecated

@@ -4,6 +4,7 @@ import br.com.zupacademy.ane.proposta.cadastroproposta.Proposta;
 import br.com.zupacademy.ane.proposta.integracao.AssociaCartaoPropostaClient;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,18 +28,18 @@ public class VerificaBloqueioCartaoController {
 
     @PostMapping("/bloqueio/{id}")
     @Transactional
-    public ResponseEntity<?> criaTestC(@PathVariable("id") Long idProposta,
+    public ResponseEntity<?> criaBloqueio(@PathVariable("id") Long idProposta,
                                        @RequestBody SistemaBloqueioForm formBloqueio,
                                        HttpServletRequest request, BloqueioForm form){
         try {
-            var retornaCli = analise.verificaBloqueio(idProposta, formBloqueio);
+            var resultadoBloqueio = analise.verificaBloqueio(idProposta, formBloqueio).get("resultado");
             Proposta proposta = manager.find(Proposta.class, idProposta);
             BloqueioCartao bloqueioCartao = form.converter(proposta, request);
             var salvaBloqueio = bloqueioCartaoRepository.save(bloqueioCartao);
-            return ResponseEntity.ok().body(salvaBloqueio);
+            return ResponseEntity.ok().body(resultadoBloqueio);
         }catch (FeignException ex){
             ex.getCause();
+            return ResponseEntity.status(400).build();
         }
-        return ResponseEntity.status(400).build();
     }
 }
